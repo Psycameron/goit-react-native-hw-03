@@ -15,7 +15,14 @@ import {
 
 import BackgroundImage from "../assets/images/bg.jpg";
 
+const initialState = {
+  login: "",
+  email: "",
+  password: "",
+};
+
 export default function RegistrationScreen() {
+  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isFocusedInput, setIsFocusedInput] = useState("");
@@ -23,6 +30,12 @@ export default function RegistrationScreen() {
   const keyboardHide = () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
+  };
+
+  const onSubmitForm = () => {
+    keyboardHide();
+    console.log(state);
+    setState(initialState);
   };
 
   const handleInputFocus = (inputName) => {
@@ -61,12 +74,16 @@ export default function RegistrationScreen() {
                   isFocusedInput === "login" && styles.inputFocused,
                 ]}
                 placeholder="Логін"
+                value={state.login}
                 onFocus={() => {
                   setIsShowKeyboard(true);
                   handleInputFocus("login");
                 }}
                 onBlur={() => {
                   handleInputFocus("");
+                }}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, login: value }));
                 }}
               />
               <TextInput
@@ -75,12 +92,16 @@ export default function RegistrationScreen() {
                   isFocusedInput === "email" && styles.inputFocused,
                 ]}
                 placeholder="Адреса електронної пошти"
+                value={state.email}
                 onFocus={() => {
                   setIsShowKeyboard(true);
                   handleInputFocus("email");
                 }}
                 onBlur={() => {
                   handleInputFocus("");
+                }}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, email: value }));
                 }}
               />
               <TextInput
@@ -90,6 +111,7 @@ export default function RegistrationScreen() {
                   isFocusedInput === "password" && styles.inputFocused,
                 ]}
                 placeholder="Пароль"
+                value={state.password}
                 secureTextEntry={true}
                 onFocus={() => {
                   setIsShowKeyboard(true);
@@ -98,6 +120,13 @@ export default function RegistrationScreen() {
                 onBlur={() => {
                   handleInputFocus("");
                 }}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, password: value }));
+                }}
+                // onSubmitEditing={() => {
+                //   // onSubmitForm();
+                //   setIsShowKeyboard(false);
+                // }}
               />
               <Text
                 style={styles.showPass}
@@ -107,7 +136,11 @@ export default function RegistrationScreen() {
               >
                 {isShowPassword ? "Показати" : "Сховати"}
               </Text>
-              <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.7}
+                onPress={() => onSubmitForm()}
+              >
                 <Text style={styles.textButton}>Зареєстуватися</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.link} activeOpacity={0.7}>

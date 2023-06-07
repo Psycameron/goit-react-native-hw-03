@@ -19,6 +19,11 @@ import BackgroundImage from "../assets/images/bg.jpg";
 
 // SplashScreen.preventAutoHideAsync();
 
+const initialState = {
+  email: "",
+  password: "",
+};
+
 export default function LoginScreen() {
   //   const [fontsLoaded] = useFonts({
   //     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
@@ -35,7 +40,7 @@ export default function LoginScreen() {
   //   if (!fontsLoaded) {
   //     return null;
   //   }
-
+  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isFocusedInput, setIsFocusedInput] = useState("");
@@ -43,6 +48,12 @@ export default function LoginScreen() {
   const keyboardHide = () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
+  };
+
+  const onSubmitForm = () => {
+    keyboardHide();
+    console.log(state);
+    setState(initialState);
   };
 
   const handleInputFocus = (inputName) => {
@@ -69,12 +80,16 @@ export default function LoginScreen() {
                   isFocusedInput === "email" && styles.inputFocused,
                 ]}
                 placeholder="Адреса електронної пошти"
+                value={state.email}
                 onFocus={() => {
                   setIsShowKeyboard(true);
                   handleInputFocus("email");
                 }}
                 onBlur={() => {
                   handleInputFocus("");
+                }}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, email: value }));
                 }}
               />
               <TextInput
@@ -84,6 +99,7 @@ export default function LoginScreen() {
                   isFocusedInput === "password" && styles.inputFocused,
                 ]}
                 placeholder="Пароль"
+                value={state.password}
                 secureTextEntry={true}
                 onFocus={() => {
                   setIsShowKeyboard(true);
@@ -92,8 +108,23 @@ export default function LoginScreen() {
                 onBlur={() => {
                   handleInputFocus("");
                 }}
+                onChangeText={(value) => {
+                  setState((prevState) => ({ ...prevState, password: value }));
+                }}
               />
-              <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+              <Text
+                style={styles.showPass}
+                onPress={() => {
+                  setIsShowPassword((prevState) => !prevState);
+                }}
+              >
+                {isShowPassword ? "Показати" : "Сховати"}
+              </Text>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.7}
+                onPress={() => onSubmitForm()}
+              >
                 <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.link} activeOpacity={0.7}>
@@ -161,6 +192,16 @@ const styles = StyleSheet.create({
   showPass: {
     position: "absolute",
     top: 308,
+    right: 32,
+
+    fontFamily: "Roboto",
+    lineHeight: 19,
+    fontSize: 16,
+    color: "#1B4371",
+  },
+  showPass: {
+    position: "absolute",
+    top: 182,
     right: 32,
 
     fontFamily: "Roboto",
